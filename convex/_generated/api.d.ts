@@ -15,6 +15,7 @@ import type {
 } from "convex/server";
 import type * as tasks from "../tasks.js";
 import type * as users from "../users.js";
+import type * as webhooks from "../webhooks.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -27,6 +28,7 @@ import type * as users from "../users.js";
 declare const fullApi: ApiFromModules<{
   tasks: typeof tasks;
   users: typeof users;
+  webhooks: typeof webhooks;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
