@@ -5,6 +5,11 @@ import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { Loader, Loader2 } from "lucide-react";
 import { set } from "react-hook-form";
+import { useToast } from "@/hooks/use-toast";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import {useUploadFiles} from "@xixixao/uploadstuff/react"
+import {v4 as uuidv4} from 'uuid'
 interface GeneratePodcastProps {
   voiceType: string;
   setAudio: Dispatch<SetStateAction<string>>;
@@ -17,14 +22,53 @@ interface GeneratePodcastProps {
  
 const useGeneratePodcast = ({setAudio, voiceType, voicePrompt, setAudioStorageId}: GeneratePodcastProps) => {
   const [generate, setGenerate] = useState(false);
-  const generatePodcast = () => {
+  const {toast} = useToast();
+  const generateUploadUrl = useMutation(api.files.generateUploadUrl);
+  const { startUpload } = useUploadFiles(generateUploadUrl);
+
+  const getAudioUrl = useMutation(api.podcast.getUrl)
+
+
+  const generatePodcast = async() => {
     setGenerate(true);
     setAudio('');
 
 
     if(!voicePrompt) {
-      // todo: show error toast maybe 
+      toast({title: "Please provide text and voiceType to generate audio"})
+
       return setGenerate(false);
+    }
+
+    try {
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/elevenlabs`, {
+        method: 'POST',
+        body: JSON.stringify({voiceType, voicePrompt})
+      });
+
+      const blob = await res.blob();
+      const filename = `podcast-${uuidv4()}.mp3`;
+      const file = new File([blob], filename, {type: 'audio/,mpeg'})
+
+      const audioUpload = await startUpload([file]);
+      console.log("audioUpload", audioUpload)
+      
+      // !cover this issue
+      const storageID = (audioUpload[0].response as any).storageID
+
+      setAudioStorageId(storageID);
+      // TODO: maybe this is schema search by id
+      const audioUrl = await getAudioUrl({storageID});
+
+      setAudio(audioUrl!);
+      setGenerate(false);
+      toast({title: "Podcast generated successfully"})
+
+    } catch (error) {
+      console.log("error", error)
+      toast({title: "Failed to generate, please try again", variant: "destructive"})
+      setGenerate(false);
     }
 
   }
