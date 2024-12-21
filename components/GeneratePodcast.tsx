@@ -4,7 +4,6 @@ import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { Loader, Loader2 } from "lucide-react";
-import { set } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -55,11 +54,11 @@ const useGeneratePodcast = ({setAudio, voiceType, voicePrompt, setAudioStorageId
       console.log("audioUpload", audioUpload)
       
       // !cover this issue
-      const storageID = (audioUpload[0].response as any).storageID
+      const storageId = (audioUpload[0].response as any).storageID
 
-      setAudioStorageId(storageID);
+      setAudioStorageId(storageId);
       // TODO: maybe this is schema search by id
-      const audioUrl = await getAudioUrl({storageID});
+      const audioUrl = await getAudioUrl({storageId});
 
       setAudio(audioUrl!);
       setGenerate(false);

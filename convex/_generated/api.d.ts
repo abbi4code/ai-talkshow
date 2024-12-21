@@ -13,6 +13,8 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as files from "../files.js";
+import type * as podcast from "../podcast.js";
 import type * as tasks from "../tasks.js";
 import type * as users from "../users.js";
 import type * as webhooks from "../webhooks.js";
@@ -26,6 +28,8 @@ import type * as webhooks from "../webhooks.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  files: typeof files;
+  podcast: typeof podcast;
   tasks: typeof tasks;
   users: typeof users;
   webhooks: typeof webhooks;

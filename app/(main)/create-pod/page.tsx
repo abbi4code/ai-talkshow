@@ -34,6 +34,8 @@ const formSchema = z.object({
   podcastTitle: z.string().min(2),
   podcastDesc: z.string().min(10)
 });
+
+const voiceCatogories = ['Drew', 'Rachel', 'Sarah']
 const Page = () => {
   const [voicetype, setVoiceType] = useState<string | null>(null);
   const [submit, setSubmit] = useState(false)
@@ -111,7 +113,7 @@ const Page = () => {
                   />
                 </SelectTrigger>
                 <SelectContent className="text-16 border-none bg-black-1 font-bold text-white-1 focus:ring-orange-1">
-                  {["voice1", "voice2"].map((category) => (
+                  {voiceCatogories.map((category) => (
                     <SelectItem
                       key={category}
                       value={category}
