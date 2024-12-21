@@ -58,6 +58,7 @@ const GeneratePodcast = (props: GeneratePodcastProps) => {
         <Button
           type="submit"
           className="text-16 bg-orange-1 py-4 font-extrabold text-white-1 transition-all duration-500 "
+          onClick={generatePodcast}
         >
           {generate ? (
             <>
