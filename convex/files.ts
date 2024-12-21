@@ -12,4 +12,4 @@ export const generateUploadUrl = mutation({
     // Return an upload URL
     return await ctx.storage.generateUploadUrl();
   },
-});
+}); 

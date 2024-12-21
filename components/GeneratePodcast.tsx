@@ -54,7 +54,7 @@ const useGeneratePodcast = ({setAudio, voiceType, voicePrompt, setAudioStorageId
       console.log("audioUpload", audioUpload)
       
       // !cover this issue
-      const storageId = (audioUpload[0].response as any).storageID
+      const storageId = (audioUpload[0].response as any).storageId
 
       setAudioStorageId(storageId);
       // TODO: maybe this is schema search by id
