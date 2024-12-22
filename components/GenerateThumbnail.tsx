@@ -7,6 +7,9 @@ import { Loader } from 'lucide-react'
 import { Label } from './ui/label'
 import { Input } from './ui/input'
 import { useToast } from '@/hooks/use-toast'
+import { useUploadFiles } from '@xixixao/uploadstuff/react'
+import { useMutation } from 'convex/react'
+import { api } from '@/convex/_generated/api'
 
 const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUrl, setImagePrompt }) => {
   const [isAithumbnail, setIsAithumbnail] = useState(true)
@@ -14,8 +17,37 @@ const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUr
   const imageref = useRef(null);
   const [imgUploading, setImgUploading] = useState(false)
   const {toast}= useToast()
+  //this mutation fn will let you upload file to a url yeah
+  const generateUploadUrl = useMutation(api.files.generateUploadUrl)
+  const { startUpload} = useUploadFiles(generateUploadUrl)
+  //this will serach by the storageId then will giv you the url
+  const getImageUrl = useMutation(api.podcast.getUrl);
 
+  const handleimage = async(blob: Blob, filename: string) => {
+    setImgUploading(true);
+    setImageUrl('')
 
+    try {
+      const file = new File([blob], filename,{ type: 'image/png'})
+      //now the file is ready we can upload this 
+
+      const uploaded = await startUpload([file]);
+      console.log("uploaded",uploaded)
+      const storageId = (uploaded[0].response as any).storageId;
+      console.log("storageId", storageId);
+
+      setImageStorageId(storageId);
+
+      const imageUrl = await getImageUrl({storageId});
+      setImageUrl(imageUrl);
+      setImgUploading(false)
+      toast({title: "Thumbnail successfully uploaded"})
+      
+    } catch (error) {
+      console.log(error)
+      toast({title: "Error while generating thumbnail", variant: 'destructive'})
+    }
+  }
   const uploadImage = async(e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
@@ -27,19 +59,18 @@ const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUr
       console.log("files",files);
       const file = files[0];
       console.log("fileeee",file);
+      //this will convert the selected image into binary then pass it to create a blob obj
       const blob = await file.arrayBuffer().then((ab) => new Blob([ab]));
       console.log("blob",blob, "file arrbin", file.arrayBuffer())
       handleimage(blob, file.name)
+
       
     } catch (error) {
       console.log("error",error)
       toast({title:"error while uploading image", variant: 'destructive'})
       
     }
-    const handleimage = (blob: Blob, filename: string) => {
-
-
-    }
+   
   }
 
   return (
