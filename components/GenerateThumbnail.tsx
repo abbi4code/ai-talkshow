@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast'
 import { useUploadFiles } from '@xixixao/uploadstuff/react'
 import { useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
+import Image from 'next/image'
 
 const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUrl, setImagePrompt }) => {
   const [isAithumbnail, setIsAithumbnail] = useState(true)
@@ -117,7 +118,23 @@ const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUr
     ): (
       <div className='image_div' onClick={() => imageref.current?.click()}>
         <Input type='file' className='text-white-1 hidden' ref={imageref} onChange={(e) => uploadImage(e)}/>
-
+        {!imgUploading ? (
+          <Image src="/icons/upload-image.svg" width={40} height={40} alt='upload' />
+        ): (
+           <div className='text-16 flex-center font-bold text-white-1'>
+            Uploading
+            <Loader size={20} className='animate-spin ml-2'/>
+           </div>
+        )}
+        <div className='flex flex-col items-center gap-1'>
+            <h2 className='text-12 font-bold text-orange-1'>Click to upload</h2>
+            <p className='text-12 font-normal text-gray-1'>SVG, PNG, JPG, or GIF (max. 1080x1080)</p>
+        </div>
+      </div>
+    )}
+    {imageUrl && (
+      <div className='flex-center w-full'>
+        <Image src={imageUrl} width={200} height={200} className='my-5' alt='thumbnail'/>
       </div>
     )}
     </>
