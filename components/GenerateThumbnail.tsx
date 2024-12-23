@@ -11,10 +11,10 @@ import { useUploadFiles } from '@xixixao/uploadstuff/react'
 import { useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import Image from 'next/image'
+import {v4 as uuidv4} from "uuid"
 
 const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUrl, setImagePrompt }) => {
   const [isAithumbnail, setIsAithumbnail] = useState(true)
-  const [generate, setGenerate] = useState(false)
   const imageref = useRef(null);
   const [imgUploading, setImgUploading] = useState(false)
   const {toast}= useToast()
@@ -49,6 +49,24 @@ const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUr
       toast({title: "Error while generating thumbnail", variant: 'destructive'})
     }
   }
+  const generateImg = async() => {
+    try {
+      setImgUploading(true)
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/huggingface`, {
+        method: "POST",
+        body: JSON.stringify({input: imagePrompt})
+      })
+      const blob = await res.blob();
+      handleimage(blob, `image-${uuidv4()}`)
+      
+    } catch (error) {
+      console.log("error",error)
+
+    }
+
+  }
+
   const uploadImage = async(e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
@@ -102,9 +120,9 @@ const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUr
        <Button
          type="submit"
          className="text-16 bg-orange-1 py-4 font-extrabold text-white-1 transition-all duration-500 "
-        //  onClick={generatePodcast}
+         onClick={generateImg}
        >
-         {generate ? (
+         {imgUploading ? (
            <>
              Generating
              <Loader size={15} className="animate-spin" />
