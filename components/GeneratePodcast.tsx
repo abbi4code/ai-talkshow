@@ -9,6 +9,10 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import {useUploadFiles} from "@xixixao/uploadstuff/react"
 import {v4 as uuidv4} from 'uuid'
+
+enum voiceType {
+  
+}
 interface GeneratePodcastProps {
   voiceType: string;
   setAudio: Dispatch<SetStateAction<string>>;

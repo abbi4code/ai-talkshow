@@ -33,14 +33,15 @@ const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUr
       //now the file is ready we can upload this 
 
       const uploaded = await startUpload([file]);
-      console.log("uploaded",uploaded)
+      // console.log("uploaded",uploaded)
       const storageId = (uploaded[0].response as any).storageId;
-      console.log("storageId", storageId);
+      // console.log("storageId", storageId);
 
       setImageStorageId(storageId);
 
       const imageUrl = await getImageUrl({storageId});
       setImageUrl(imageUrl);
+      // console.log("imageUrl",imageUrl)
       setImgUploading(false)
       toast({title: "Thumbnail successfully uploaded"})
       
@@ -52,11 +53,15 @@ const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUr
   const generateImg = async() => {
     try {
       setImgUploading(true)
+      console.log("imageProemtp",imagePrompt)
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/huggingface`, {
         method: "POST",
         body: JSON.stringify({input: imagePrompt})
       })
+      console.log(
+        "res",res
+      )
       const blob = await res.blob();
       handleimage(blob, `image-${uuidv4()}`)
       
@@ -81,13 +86,10 @@ const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUr
       //this will convert the selected image into binary then pass it to create a blob obj
       const blob = await file.arrayBuffer().then((ab) => new Blob([ab]));
       console.log("blob",blob, "file arrbin", file.arrayBuffer())
-      handleimage(blob, file.name)
-
-      
+      handleimage(blob, file.name)   
     } catch (error) {
       console.log("error",error)
-      toast({title:"error while uploading image", variant: 'destructive'})
-      
+      toast({title:"error while uploading image", variant: 'destructive'})   
     }
    
   }
@@ -109,8 +111,8 @@ const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUr
           Ai prompt to generate thumbnail
         </Label>
        <Textarea
-         className="input-class font-light focus-visible:ring-offset-orange-1"
-         placeholder="Provide text to generate audio"
+         className="input-class font-light focus-visible:ring-offset-orange-1 text-white-1"
+         placeholder="Provide text to generate thumbnail"
          rows={5}
          value={imagePrompt}
          onChange={(e) => setImagePrompt(e.target.value)}
