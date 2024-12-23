@@ -29,6 +29,10 @@ import GeneratePodcast from "@/components/GeneratePodcast";
 import GenerateThumbnail from "@/components/GenerateThumbnail";
 import { Loader } from "lucide-react";
 import { Id } from "@/convex/_generated/dataModel";
+import { useToast } from "@/hooks/use-toast";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   podcastTitle: z.string().min(2),
@@ -50,10 +54,10 @@ const Page = () => {
   const [audioDuration, setAudioDuration] = useState(0)
 
   const [voicePrompt, setVoicePrompt] = useState("")
+  const {toast} = useToast();
 
-  
-
-  
+  const createPodcast = useMutation(api.podcast.createPodcast)
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,10 +68,25 @@ const Page = () => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setSubmit(true)
+    try {
+      if(!audioUrl || !imageUrl || !voicetype){
+        toast({title: "Please generate audio and image first"});
+        setSubmit(false)
+        throw new Error("Please generate audio and image")
+      }
+      const podcast = await createPodcast({podcastTitle: values.podcastTitle, podcastDesc: values.podcastDesc,audioDuration,audioUrl,imageUrl,imagePrompt,voiceType,views: 0,voicePrompt,imageStorageId: imageStorageId!, audioStorageId:audioStorageId!})
+      console.log("Podcast",podcast)
+      toast({title: "Podcast created successfully"})
+      setSubmit(false)
+      router.push("/")
+    } catch (error) {
+      console.log("error",error)
+      toast({title: "Error while creating podcast",variant:"destructive"})
+      setSubmit(false)
+    }
+
   }
   return (
     <div className="mt-10 flex flex-col">
