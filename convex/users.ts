@@ -25,8 +25,8 @@ export const updateUser = internalMutation({
         email: v.string(),
         imageUrl: v.string()
     },
-    handler: async (ctx, args) => {
-        const user = await ctx.db.query("users").filter((c) => c.eq(c.field("clerkId"), args.clerkId));
+    async handler(ctx, args) {
+        const user = await ctx.db.query("users").filter((c) => c.eq(c.field("clerkId"), args.clerkId)).unique();
 
         if(!user){
             throw new ConvexError("User not found");
@@ -37,7 +37,7 @@ export const updateUser = internalMutation({
             email: args.email,
         })
 
-        const podcast = await ctx.db.query("podcasts").filter((c) => c.eq(c.field("authorId"), args.clerkId));
+        const podcast = await ctx.db.query("podcasts").filter((c) => c.eq(c.field("authorId"), args.clerkId)).collect();
 
         await Promise.all(
             podcast.map(async(p)=> {

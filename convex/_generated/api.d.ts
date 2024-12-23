@@ -14,10 +14,10 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as files from "../files.js";
+import type * as http from "../http.js";
 import type * as podcast from "../podcast.js";
 import type * as tasks from "../tasks.js";
 import type * as users from "../users.js";
-import type * as webhooks from "../webhooks.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -29,10 +29,10 @@ import type * as webhooks from "../webhooks.js";
  */
 declare const fullApi: ApiFromModules<{
   files: typeof files;
+  http: typeof http;
   podcast: typeof podcast;
   tasks: typeof tasks;
   users: typeof users;
-  webhooks: typeof webhooks;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

@@ -41,7 +41,7 @@ const formSchema = z.object({
 
 const voiceCatogories = ['Drew', 'Rachel', 'Sarah']
 const Page = () => {
-  const [voicetype, setVoiceType] = useState<string | null>(null);
+  const [voicetype, setVoiceType] = useState("");
   const [submit, setSubmit] = useState(false)
 
   const [imagePrompt, setImagePrompt] = useState('');
@@ -76,7 +76,7 @@ const Page = () => {
         setSubmit(false)
         throw new Error("Please generate audio and image")
       }
-      const podcast = await createPodcast({podcastTitle: values.podcastTitle, podcastDesc: values.podcastDesc,audioDuration,audioUrl,imageUrl,imagePrompt,voiceType,views: 0,voicePrompt,imageStorageId: imageStorageId!, audioStorageId:audioStorageId!})
+      const podcast = await createPodcast({podcastTitle: values.podcastTitle, podcastDesc: values.podcastDesc,audioDuration,audioUrl,imageUrl,imagePrompt,voiceType: voicetype,views: 0,voicePrompt,imageStorageId: imageStorageId!, audioStorageId:audioStorageId!})
       console.log("Podcast",podcast)
       toast({title: "Podcast created successfully"})
       setSubmit(false)
@@ -118,7 +118,7 @@ const Page = () => {
             />
             <div className="flex w-full flex-col gap-2.5">
               <Label className="font-bold text-16 text-white-1 ">
-                Category
+                Select Ai voice
               </Label>
               <Select onValueChange={(value) => setVoiceType(value)}>
                 <SelectTrigger
