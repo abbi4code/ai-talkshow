@@ -14,6 +14,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "adjoining-jellyfish-231.convex.cloud"
+      },
+      {
+        protocol: "https",
+        hostname: "img.clerk.com"
       }
     ]
   }
