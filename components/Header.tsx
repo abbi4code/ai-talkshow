@@ -11,7 +11,6 @@ const Header = ({headerTitle, titleClassName}: {headerTitle?:string, titleClassn
       <Link href="/discover" className='text-16 font-semibold text-orange-1'>
       See all
       </Link>
-
     </header>
   )
 }

@@ -8,7 +8,7 @@ import React, { useState } from 'react'
 import LoaderSpinner from './LoaderSpinner';
 import Image from 'next/image';
 import { Button } from './ui/button';
-// import { useAudio } from "@/providers/AudioProvider";
+import { useAudio } from "@/providers/AudioProvider";
 
 // interface PodcastDetailPlayerProps {
 //     audioUrl: string,
@@ -38,7 +38,7 @@ const PodcastDetailPlayer = ({  audioUrl,
         const {toast} = useToast();
         const [isDelete, setIsDelete] = useState(false)
         const deletePodcast = useMutation(api.podcast.deletePodcast)
-        // const { setAudio } = useAudio()
+        const { setAudio } = useAudio()
 
         const handleDelete = async() =>{
             try {
@@ -52,13 +52,13 @@ const PodcastDetailPlayer = ({  audioUrl,
 
         }
         const handlePlayer = () =>{
-            // setAudio({
-            //     title: podcastTitle,
-            //     audioUrl,
-            //     imageUrl,
-            //     author,
-            //     podcastId
-            // })
+            setAudio({
+                title: podcastTitle,
+                audioUrl,
+                imageUrl,
+                author,
+                podcastId
+            })
         }
         
         if(!imageUrl || !authorImageUrl) {
