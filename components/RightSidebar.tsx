@@ -27,7 +27,7 @@ const RightSidebar = () => {
       'h-[calc(100vh - 140px)]': audio?.audioUrl
     })}>
        <SignedIn>
-        <Link href={`profile/${user?.id}`} className='flex gap-3 pb-12'>
+        <Link href={`/profile/${user?.id}`} className='flex gap-3 pb-12'>
         <UserButton/>
         <div className="flex w-full items-center justify-between">
             <h1 className="text-16 truncate font-semibold text-white-1">{user?.firstName} {user?.lastName}</h1>
@@ -48,7 +48,7 @@ const RightSidebar = () => {
         <Header headerTitle='Top Podcasters'/>
         <div className='flex flex-col gap-6'>
           {topPodcasters?.slice(0,3).map((podcaster)=>(
-            <div key={podcaster._id} className='flex cursor-pointer justify-between' onClick={() => router.push(`profile/${podcaster.clerkId}`)}>
+            <div key={podcaster._id} className='flex cursor-pointer justify-between' onClick={() => router.push(`/profile/${podcaster.clerkId}`)}>
               <div>
                 <Image src={podcaster.imageUrl} alt={podcaster.name} width={44} height={44} className='aspect-square rounded-lg'/>
                 <h2 className='text-14 font-semibold text-white-1'>

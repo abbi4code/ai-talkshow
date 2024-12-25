@@ -6,8 +6,8 @@ import Link from 'next/link'
 interface EmptyPodprops {
     title: string,
     search?: string,
-    buttonLink: string,
-    buttonText: string
+    buttonLink?: string,
+    buttonText?: string
 }
 const EmptyPod = ({title, search, buttonLink,buttonText}:EmptyPodprops) => {
   return (

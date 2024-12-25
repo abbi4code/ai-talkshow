@@ -8,7 +8,7 @@ import React from 'react'
 const PodcastCard = ({title,description,imgURL,podcastID}: {title: string,description:string, imgURL: string, podcastID: Id<"podcasts">}) => {
   const router = useRouter()
   const handlePodcast = () =>{
-    router.push(`podcasts/${podcastID}`, {scroll: true})
+    router.push(`/podcasts/${podcastID}`, {scroll: true})
 
   }
 

@@ -41,6 +41,7 @@ const ProfileFace = ({podcastData, imageUrl, userfirstName}) => {
     const {setAudio} = useAudio();
     // const [randomPodcast, setRandomPodcast] = useState<PodcastProps | null>(null);
     const [randomPodcast, setRandomPodcast] = useState(null);
+    console.log("podcast Data",podcastData)
 
     const playRandomPodcast = () => {
         const randomIndex = Math.floor(Math.random() * podcastData.podcasts.length);
@@ -97,7 +98,8 @@ const ProfileFace = ({podcastData, imageUrl, userfirstName}) => {
             alt="headphones"
           />
           <h2 className="text-16 font-semibold text-white-1">
-            {podcastData?.listeners} &nbsp;
+            {podcastData?.totalListeners} &nbsp;
+            {console.log("views",podcastData?.totalListeners)}
             <span className="font-normal text-white-2">monthly listeners</span>
           </h2>
         </figure>

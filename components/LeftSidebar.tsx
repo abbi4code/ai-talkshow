@@ -11,6 +11,7 @@ import { useAudio } from "@/providers/AudioProvider";
 import { Button } from "./ui/button";
 const LeftSidebar = () => {
   const pathName = usePathname();
+  console.log("pathname",pathName)
   const router = useRouter();
   const { signOut } = useClerk();
   const { audio }: { audio: { audioUrl?: string } } = useAudio();
