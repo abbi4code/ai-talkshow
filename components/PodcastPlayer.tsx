@@ -3,11 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-import { formatTime } from "@/lib/formatTime";
+
 import { cn } from "@/lib/utils";
 import { useAudio } from "@/providers/AudioProvider";
 
 import { Progress } from "./ui/progress";
+import { formatTime } from "@/lib/formatTime";
 
 const PodcastPlayer = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -116,7 +117,7 @@ const PodcastPlayer = () => {
         <div className="flex items-center gap-4 max-md:hidden">
           <Link href={`/podcast/${audio?.podcastId}`}>
             <Image
-              src={audio?.imageUrl! || "/images/player1.png"}
+              src={audio?.imageUrl || "/images/player1.png"}
               width={64}
               height={64}
               alt="player1"

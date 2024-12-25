@@ -1,5 +1,4 @@
 "use client"
-import { Id } from "@/convex/_generated/dataModel";
 import { api } from '@/convex/_generated/api';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation } from 'convex/react';
@@ -9,20 +8,20 @@ import LoaderSpinner from './LoaderSpinner';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import { useAudio } from "@/providers/AudioProvider";
+import { Id } from '@/convex/_generated/dataModel';
 
-// interface PodcastDetailPlayerProps {
-//     audioUrl: string,
-//     podcastTitle: string,
-//     author: 
-//     imageUrl,
-//     podcastId,
-//     imageStorageId,
-//     audioStorageId,
-//     isOwner,
-//     authorImageUrl,
-//     authorId
-
-// }
+export interface PodcastDetailPlayerProps {
+  audioUrl: string;
+  podcastTitle: string;
+  author: string;
+  isOwner: boolean;
+  imageUrl: string;
+  podcastId: Id<"podcasts">;
+  imageStorageId: Id<"_storage">;
+  audioStorageId: Id<"_storage">;
+  authorImageUrl: string;
+  authorId: string;
+}
 
 const PodcastDetailPlayer = ({  audioUrl,
     podcastTitle,
@@ -33,7 +32,7 @@ const PodcastDetailPlayer = ({  audioUrl,
     audioStorageId,
     isOwner,
     authorImageUrl,
-    authorId}) => {
+    authorId}: PodcastDetailPlayerProps) => {
         const router = useRouter();
         const {toast} = useToast();
         const [isDelete, setIsDelete] = useState(false)
@@ -52,6 +51,7 @@ const PodcastDetailPlayer = ({  audioUrl,
 
         }
         const handlePlayer = () =>{
+          console.log("clicked motherffff",podcastId)
             setAudio({
                 title: podcastTitle,
                 audioUrl,
