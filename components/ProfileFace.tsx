@@ -7,35 +7,35 @@ import Image from 'next/image';
 import { Button } from './ui/button';
 import { Id } from '@/convex/_generated/dataModel';
 
-// interface ProfilePodcastProps {
-//     podcasts: PodcastProps[];
-//     totalListeners: number;
-// }
+interface ProfilePodcastProps {
+    podcasts: PodcastProps[];
+    totalListeners: number;
+}
 
-// interface profileCardProps {
-//     podcastData: ProfilePodcastProps,
-//     imageUrl: string,
-//     userfirstName: string
-// }
-// interface PodcastProps {
-//     _id: Id<"podcasts">;
-//     _creationTime: number;
-//     audioStorageId: Id<"_storage"> | undefined;
-//     user: Id<"users">;
-//     podcastTitle: string;
-//     podcastDesc: string;
-//     audioUrl: string | null;
-//     imageUrl: string | null;
-//     imageStorageId: Id<"_storage"> | undefined;
-//     author: string;
-//     authorId: string;
-//     authorImageUrl: string;
-//     voicePrompt: string;
-//     imagePrompt: string | null;
-//     voiceType: string;
-//     audioDuration: number;
-//     views: number;
-//   }
+interface profileCardProps {
+    podcastData: ProfilePodcastProps,
+    imageUrl: string,
+    userfirstName: string
+}
+interface PodcastProps {
+    _id: Id<"podcasts">;
+    _creationTime: number;
+    audioStorageId: Id<"_storage"> | undefined;
+    user: Id<"users">;
+    podcastTitle: string;
+    podcastDesc: string;
+    audioUrl: string | null;
+    imageUrl: string | null;
+    imageStorageId: Id<"_storage"> | undefined;
+    author: string;
+    authorId: string;
+    authorImageUrl: string;
+    voicePrompt: string;
+    imagePrompt: string | null;
+    voiceType: string;
+    audioDuration: number;
+    views: number;
+  }
 
 const ProfileFace = ({podcastData, imageUrl, userfirstName}) => {
     const {setAudio} = useAudio();
