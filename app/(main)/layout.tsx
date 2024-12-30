@@ -3,6 +3,7 @@ import RightSidebar from "@/components/RightSidebar";
 import Image from "next/image";
 import { Toaster } from "@/components/ui/toaster"
 import PodcastPlayer from "@/components/PodcastPlayer";
+import Navmod from "@/components/Navmod";
 
 export default function RootLayout({
   children,
@@ -17,7 +18,7 @@ export default function RootLayout({
             <div className="mx-auto flex flex-col w-full max-w-5xl max-sm:px-4">
                 <div className="flex h-16 items-center justify-between md:hidden ">
                     <Image src="/icons/logo.svg" width={30} height={30} alt="menu-icon"/>
-                    mobilenav
+                    <Navmod/>
                 </div>
                 <div className="flex flex-col md:pb:14">
                     
