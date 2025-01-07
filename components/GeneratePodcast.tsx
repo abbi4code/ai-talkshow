@@ -127,7 +127,7 @@ const GeneratePodcast = (props: GeneratePodcastProps) => {
   return (
     <div className="">
       <div className="flex flex-col gap-2.5 text-white-1">
-        <div className="generate_thumbnail text-white-1">
+        <div className="generate_content text-white-1">
           <Button
             type="button"
             variant={"plain"}

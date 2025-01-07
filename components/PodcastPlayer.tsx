@@ -96,7 +96,7 @@ const PodcastPlayer = () => {
 
   return (
     <div
-      className={cn("sticky bottom-0 left-0 flex size-full flex-col", {
+      className={cn("sticky bottom-0 left-0 flex size-full flex-col bg-black-3 ", {
         hidden: !audio?.audioUrl || audio?.audioUrl === "",
       })}
     >
@@ -106,7 +106,7 @@ const PodcastPlayer = () => {
         className="w-full"
         max={duration}
       />
-      <section className="glassmorphism-black flex h-[112px] w-full items-center justify-between px-4 max-md:justify-center max-md:gap-5 md:px-12">
+      <section className="bg-[#000000] flex h-[112px] w-full items-center justify-between px-4 max-md:justify-center  md:px-12">
         <audio
           ref={audioRef}
           src={audio?.audioUrl}
