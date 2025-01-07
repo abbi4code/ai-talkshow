@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { Button } from './ui/button'
 import { cn } from '@/lib/utils'
 
@@ -12,8 +12,17 @@ import { useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import Image from 'next/image'
 import {v4 as uuidv4} from "uuid"
+import { Id } from '@/convex/_generated/dataModel'
 
-const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUrl, setImagePrompt }) => {
+interface GenerateThumbnailProps{
+  imagePrompt: string;
+  setImageUrl: Dispatch<SetStateAction<string>>;
+  setImageStorageId: Dispatch<SetStateAction<Id<'_storage'> | null>>;
+  imageUrl: string,
+  setImagePrompt: Dispatch<SetStateAction<string>>;
+}
+
+const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUrl, setImagePrompt }:GenerateThumbnailProps) => {
   const [isAithumbnail, setIsAithumbnail] = useState(true)
   const imageref = useRef(null);
   const [imgUploading, setImgUploading] = useState(false)
@@ -40,7 +49,9 @@ const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUr
       setImageStorageId(storageId);
 
       const imageUrl = await getImageUrl({storageId});
-      setImageUrl(imageUrl);
+      if(imageUrl){
+        setImageUrl(imageUrl);
+      }
       // console.log("imageUrl",imageUrl)
       setImgUploading(false)
       toast({title: "Thumbnail successfully uploaded"})

@@ -3,16 +3,14 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { Loader, Loader2 } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import {useUploadFiles} from "@xixixao/uploadstuff/react"
-import {v4 as uuidv4} from 'uuid'
+import { useUploadFiles } from "@xixixao/uploadstuff/react";
+import { v4 as uuidv4 } from "uuid";
+import { cn } from "@/lib/utils";
 
-enum voiceType {
-  
-}
 interface GeneratePodcastProps {
   voiceType: string;
   setAudio: Dispatch<SetStateAction<string>>;
@@ -22,87 +20,169 @@ interface GeneratePodcastProps {
   setVoicePrompt: Dispatch<SetStateAction<string>>;
   setAudioDuration: Dispatch<SetStateAction<number>>;
 }
- 
-const useGeneratePodcast = ({setAudio, voiceType, voicePrompt, setAudioStorageId}: GeneratePodcastProps) => {
+
+const useGeneratePodcast = ({
+  setAudio,
+  voiceType,
+  voicePrompt,
+  setAudioStorageId,
+}: GeneratePodcastProps) => {
   const [generate, setGenerate] = useState(false);
-  const {toast} = useToast();
+  const { toast } = useToast();
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
   const { startUpload } = useUploadFiles(generateUploadUrl);
 
-  const getAudioUrl = useMutation(api.podcast.getUrl)
+  const getAudioUrl = useMutation(api.podcast.getUrl);
 
-
-  const generatePodcast = async() => {
+  const generatePodcast = async () => {
     setGenerate(true);
-    setAudio('');
+    setAudio("");
 
-
-    if(!voicePrompt) {
-      toast({title: "Please provide text and voiceType to generate audio"})
+    if (!voicePrompt) {
+      toast({ title: "Please provide text and voiceType to generate audio" });
 
       return setGenerate(false);
     }
 
     try {
-
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/elevenlabs`, {
-        method: 'POST',
-        body: JSON.stringify({voiceType, voicePrompt})
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/elevenlabs`,
+        {
+          method: "POST",
+          body: JSON.stringify({ voiceType, voicePrompt }),
+        }
+      );
+    
 
       const blob = await res.blob();
       const filename = `podcast-${uuidv4()}.mp3`;
-      const file = new File([blob], filename, {type: 'audio/,mpeg'})
+      const file = new File([blob], filename, { type: "audio/,mpeg" });
 
       const audioUpload = await startUpload([file]);
-      console.log("audioUpload", audioUpload)
-      
+      console.log("audioUpload", audioUpload);
+
       // !cover this issue
-      const storageId = (audioUpload[0].response as any).storageId
+      const storageId = (audioUpload[0].response as any).storageId;
 
       setAudioStorageId(storageId);
       // TODO: maybe this is schema search by id
-      const audioUrl = await getAudioUrl({storageId});
+      const audioUrl = await getAudioUrl({ storageId });
 
       setAudio(audioUrl!);
       setGenerate(false);
-      toast({title: "Podcast generated successfully"})
-
+      toast({ title: "Podcast generated successfully" });
     } catch (error) {
-      console.log("error", error)
-      toast({title: "Failed to generate, please try again", variant: "destructive"})
+      console.log("error", error);
+      toast({
+        title: "Failed to generate, please try again",
+        variant: "destructive",
+      });
       setGenerate(false);
     }
-
-  }
-
-  
+  };
 
   return {
     generate,
-    generatePodcast
-  }
-}
-
+    generatePodcast,
+  };
+};
 const GeneratePodcast = (props: GeneratePodcastProps) => {
   // const [generate, setgenerate] = useState(false);
-  const {generate, generatePodcast} = useGeneratePodcast(props);
+  const { generate, generatePodcast } = useGeneratePodcast(props);
+  const [isAiPodcast, setIsAiPodcast] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState('');
+
+  // const handleAipromptonchange = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  //   setAiPrompt(e.target.value);
+
+  //   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/gemeni`,{
+  //     method: "POST",
+  //     body: JSON.stringify({aiPrompt})
+  //   })
+  //   console.log("ai res", res);
+  //   props.setVoicePrompt(res.body);
+
+  // }
+  const generatePodcastbyai = async () => {
+    try {
+      console.log("aiproempt", aiPrompt);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/gemeni`,{
+        method: 'POST',
+        body: JSON.stringify({textPrompt: aiPrompt})
+      })
+      console.log("res by ai", res)
+      
+    } catch (error) {
+      console.log("error while generating via ai prompt", error.message)
+    }
+  }
   return (
     <div className="">
       <div className="flex flex-col gap-2.5 text-white-1">
-        <Label className="text-16 font-bold">
+        {/* <Label className="text-16 font-bold">
           Ai prompt to generate Podcast
-        </Label>
-        <Textarea
-          className="input-class font-light focus-visible:ring-offset-orange-1"
-          placeholder="Provide text to generate audio"
-          rows={5}
-          value={props.voicePrompt}
-          onChange={(e) => props.setVoicePrompt(e.target.value)}
-        />
+        </Label> */}
+        <div className="generate_thumbnail text-white-1">
+          <Button
+            type="button"
+            variant={"plain"}
+            className={cn("", { "bg-black-6": isAiPodcast })}
+            onClick={() => setIsAiPodcast(true)}
+          >
+            {" "}
+            Use Ai to generate Podcast audio
+          </Button>
+          <Button
+            type="button"
+            variant={"plain"}
+            className={cn("", { "bg-black-6": !isAiPodcast })}
+            onClick={() => setIsAiPodcast(false)}
+          >
+            Custom prompt to generate Podcast audio
+          </Button>
+        </div>
+        {!isAiPodcast ? (
+          <div>
+            <Textarea
+              className="input-class font-light focus-visible:ring-offset-orange-1"
+              placeholder="Provide custom text to generate audio"
+              rows={5}
+              value={props.voicePrompt}
+              onChange={(e) => props.setVoicePrompt(e.target.value)}
+            />
+          </div>
+        ) : (
+          <div>
+            <Textarea
+              className="input-class font-light focus-visible:ring-offset-orange-1"
+              placeholder="Provide prompt for ai to generate text to generate audio "
+              rows={5}
+              value={aiPrompt}
+              // onChange={(e) => props.setVoicePrompt(e.target.value)}
+              onChange={(e) => setAiPrompt(e.target.value)}
+            />
+          </div>
+        )}
       </div>
       <div className="mt-5 w-full max-w-[200px]">
-        <Button
+        {isAiPodcast ? (
+          <Button
+          type="submit"
+          className="text-16 bg-orange-1 py-4 font-extrabold text-white-1 transition-all duration-500 "
+          onClick={generatePodcastbyai}
+        >
+          {generate ? (
+            <>
+              Generating
+              <Loader size={15} className="animate-spin" />
+            </>
+          ) : (
+            "Generate Content"
+          )}
+        </Button>
+
+        ): (
+          <Button
           type="submit"
           className="text-16 bg-orange-1 py-4 font-extrabold text-white-1 transition-all duration-500 "
           onClick={generatePodcast}
@@ -116,9 +196,19 @@ const GeneratePodcast = (props: GeneratePodcastProps) => {
             "Generate"
           )}
         </Button>
+
+        )}
       </div>
       {props.audio && (
-        <audio controls src={props.audio} autoPlay className="mt-5" onLoadedMetadata={(e) => props.setAudioDuration(e.currentTarget.duration)}/>
+        <audio
+          controls
+          src={props.audio}
+          autoPlay
+          className="mt-5"
+          onLoadedMetadata={(e) =>
+            props.setAudioDuration(e.currentTarget.duration)
+          }
+        />
       )}
     </div>
   );
