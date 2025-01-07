@@ -8,7 +8,7 @@ export const POST = async (req: Request) => {
     const model = GenAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const prompt = `
-Write a short podcast script, not more than 100 words, about the following topic:
+Write a short podcast script, not more than 20 words, about the following topic:
 "${textPrompt}"
 
 Include an introduction, one key idea, and a conclusion. Keep the tone conversational and engaging and dont include text like these (Short musical interlude) just give the result out as text .
@@ -17,11 +17,25 @@ Include an introduction, one key idea, and a conclusion. Keep the tone conversat
     const result = await model.generateContent(prompt);
     console.log(result.response.text());
     const textresult = result.response.text();
-    return new NextResponse(textresult.toString(), {
-        status: 200
-    })
+    return new NextResponse(JSON.stringify({ content: textresult }), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   } catch (error: any) {
     console.log("error", error);
-    return NextResponse.json({ error: error.message });
+    return new NextResponse(
+      JSON.stringify({
+        error: "Failed to generate Content",
+        details: error.message,
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
   }
 };

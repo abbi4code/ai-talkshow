@@ -26,6 +26,7 @@ const useGeneratePodcast = ({
   voiceType,
   voicePrompt,
   setAudioStorageId,
+  setVoicePrompt
 }: GeneratePodcastProps) => {
   const [generate, setGenerate] = useState(false);
   const { toast } = useToast();
@@ -67,7 +68,7 @@ const useGeneratePodcast = ({
       setAudioStorageId(storageId);
       // TODO: maybe this is schema search by id
       const audioUrl = await getAudioUrl({ storageId });
-
+      setVoicePrompt('');
       setAudio(audioUrl!);
       setGenerate(false);
       toast({ title: "Podcast generated successfully" });
@@ -89,39 +90,43 @@ const useGeneratePodcast = ({
 const GeneratePodcast = (props: GeneratePodcastProps) => {
   // const [generate, setgenerate] = useState(false);
   const { generate, generatePodcast } = useGeneratePodcast(props);
-  const [isAiPodcast, setIsAiPodcast] = useState(false);
+  const [isAiPodcast, setIsAiPodcast] = useState(true);
   const [aiPrompt, setAiPrompt] = useState('');
+  const [generatingPod, setGeneratingPod] = useState(false);
+  const { toast } = useToast();
 
-  // const handleAipromptonchange = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-  //   setAiPrompt(e.target.value);
-
-  //   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/gemeni`,{
-  //     method: "POST",
-  //     body: JSON.stringify({aiPrompt})
-  //   })
-  //   console.log("ai res", res);
-  //   props.setVoicePrompt(res.body);
-
-  // }
   const generatePodcastbyai = async () => {
     try {
+      setGeneratingPod(true);
       console.log("aiproempt", aiPrompt);
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/gemeni`,{
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({textPrompt: aiPrompt})
       })
       console.log("res by ai", res)
+      if(!res.ok){
+        console.log("error from AI server", await res.text());
+        toast({title: await res.text(), variant: "destructive"})
+        return;
+      }
+      const data = await res.json();
+      console.log("data from backend ai", data.content)
+      await props.setVoicePrompt(data.content);
+      console.log("voicePrompt", props.voicePrompt);
+      generatePodcast();
+      setGeneratingPod(false);
       
     } catch (error) {
       console.log("error while generating via ai prompt", error.message)
+      setGeneratingPod(false)
     }
   }
   return (
     <div className="">
       <div className="flex flex-col gap-2.5 text-white-1">
-        {/* <Label className="text-16 font-bold">
-          Ai prompt to generate Podcast
-        </Label> */}
         <div className="generate_thumbnail text-white-1">
           <Button
             type="button"
@@ -158,7 +163,6 @@ const GeneratePodcast = (props: GeneratePodcastProps) => {
               placeholder="Provide prompt for ai to generate text to generate audio "
               rows={5}
               value={aiPrompt}
-              // onChange={(e) => props.setVoicePrompt(e.target.value)}
               onChange={(e) => setAiPrompt(e.target.value)}
             />
           </div>
@@ -171,7 +175,7 @@ const GeneratePodcast = (props: GeneratePodcastProps) => {
           className="text-16 bg-orange-1 py-4 font-extrabold text-white-1 transition-all duration-500 "
           onClick={generatePodcastbyai}
         >
-          {generate ? (
+          {generatingPod ? (
             <>
               Generating
               <Loader size={15} className="animate-spin" />
