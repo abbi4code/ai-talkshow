@@ -31,6 +31,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.54.1",
+    "replicate": "^1.0.1",
     "stream": "^0.0.3",
     "svix": "^1.43.0",
     "tailwind-merge": "^2.5.5",

@@ -24,7 +24,7 @@ interface GenerateThumbnailProps{
 
 const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUrl, setImagePrompt }:GenerateThumbnailProps) => {
   const [isAithumbnail, setIsAithumbnail] = useState(true)
-  const imageref = useRef(null);
+  const imageref = useRef<HTMLInputElement>(null);
   const [imgUploading, setImgUploading] = useState(false)
   const {toast}= useToast()
   //this mutation fn will let you upload file to a url yeah
@@ -64,21 +64,29 @@ const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUr
   const generateImg = async() => {
     try {
       setImgUploading(true)
-      console.log("imageProemtp",imagePrompt)
+      console.log("imagePrompt",imagePrompt)
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/huggingface`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/stable-diffusion`, {
         method: "POST",
-        body: JSON.stringify({input: imagePrompt})
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({prompt: imagePrompt})
       })
-      console.log(
-        "res",res
-      )
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to generate image');
+      }
+      
+      console.log("res",res)
       const blob = await res.blob();
       handleimage(blob, `image-${uuidv4()}`)
       
-    } catch (error) {
+    } catch (error: any) {
       console.log("error",error)
-
+      toast({title: "Error generating image", description: error.message, variant: 'destructive'})
+      setImgUploading(false)
     }
 
   }
