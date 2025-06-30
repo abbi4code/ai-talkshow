@@ -13,6 +13,7 @@ html {
 }
 
 @layer utilities {
+
   .input-class {
     @apply text-16 placeholder:text-16 bg-black-1 rounded-[6px] placeholder:text-gray-1 border-none text-gray-1;
   }
@@ -64,7 +65,50 @@ html {
   .text-32 {
     @apply text-[32px] leading-normal;
   }
+
+  .modern-card {
+    @apply bg-gradient-to-br from-black-3/80 to-black-2/60 backdrop-blur-xl border border-gray-2/30 rounded-2xl p-6 transition-all duration-300 hover:border-green-1/30 hover:shadow-2xl hover:shadow-green-1/20 hover:scale-[1.02];
+  }
+  
+  .glass-effect {
+    @apply bg-gradient-to-br from-black-3/50 to-black-2/30 backdrop-blur-xl border border-white-1/10 rounded-2xl p-6 transition-all duration-300;
+  }
+  
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-white via-white-2 to-green-1/90 bg-clip-text text-transparent;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
+@layer base {
+ 
+}
+
 
 /* ===== custom classes ===== */
 
@@ -204,10 +248,50 @@ html {
   }
 }
 @layer base {
-  * {
+  /* * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
+  } */
+
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 141 76% 48%;
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 70%;
+
+    --accent: 141 76% 48%;
+    --accent-foreground: 0 0% 0%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 141 76% 48%;
+
+    --radius: 0.5rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-manrope;
   }
 }
