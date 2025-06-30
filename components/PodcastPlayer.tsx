@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 
@@ -39,7 +38,7 @@ const PodcastPlayer = () => {
       const rect = e.currentTarget.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
       
-      let changedVolume = (clickX/rect.width) * 100;
+      const changedVolume = (clickX/rect.width) * 100;
       const newVolume = Math.max(0, Math.min(100, changedVolume));
       
       setVolume(newVolume);
@@ -140,7 +139,7 @@ const PodcastPlayer = () => {
       <div className='flex items-center gap-4 flex-1 min-w-0'>
         <div className='relative'>
           <audio ref={audioRef} src={audio?.audioUrl} className="hidden" onLoadedMetadata={handleLoadedMetadata} onEnded={handleAudioEnded}/>
-                      <Image src={audio?.imageUrl!} alt={audio?.title!} className='w-24 h-24 opacity-100 rounded-lg object-cover' width={96} height={96} />
+                      <Image src={audio?.imageUrl || '/images/player1.png'} alt={audio?.title || 'Podcast'} className='w-24 h-24 opacity-100 rounded-lg object-cover' width={96} height={96} />
           <div className='absolute inset-0 bg-green-1/20 rounded-lg animate-pulse opacity-0 hover:opacity-100 transition-opacity' />
         </div>
         <div className='min-w-0 flex-1'>

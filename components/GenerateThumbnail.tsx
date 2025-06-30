@@ -66,7 +66,7 @@ const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUr
       setImgUploading(true)
       console.log("imagePrompt",imagePrompt)
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/stable-diffusion`, {
+      const res = await fetch("/api/stable-diffusion", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',

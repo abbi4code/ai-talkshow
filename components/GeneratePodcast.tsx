@@ -47,7 +47,7 @@ const useGeneratePodcast = ({
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/elevenlabs`,
+        "/api/elevenlabs",
         {
           method: "POST",
           body: JSON.stringify({ voiceType, voicePrompt }),
@@ -99,7 +99,7 @@ const GeneratePodcast = (props: GeneratePodcastProps) => {
     try {
       setGeneratingPod(true);
       console.log("aiproempt", aiPrompt);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/gemeni`,{
+      const res = await fetch("/api/gemeni",{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ const GeneratePodcast = (props: GeneratePodcastProps) => {
       generatePodcast();
       setGeneratingPod(false);
       
-    } catch (error) {
+    } catch (error: any) {
       console.log("error while generating via ai prompt", error.message)
       setGeneratingPod(false)
     }

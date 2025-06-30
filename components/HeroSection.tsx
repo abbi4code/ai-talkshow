@@ -1,5 +1,4 @@
 
-import { Play, Volume2 } from 'lucide-react';
 import Link from 'next/link';
 
 const HeroSection = () => {

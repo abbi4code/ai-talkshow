@@ -1,6 +1,5 @@
 "use client"
 
-import { Id } from '@/convex/_generated/dataModel'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React from 'react'
@@ -12,7 +11,6 @@ interface PodcastCardProps {
   imgURL: string;
   author: string;
   podcastID?: string,
-  duration: string;
   category: string;
 }
 
@@ -39,7 +37,7 @@ interface PodcastCardProps {
 // export default PodcastCard
 
 
-const PodcastCard = ({ title, description, imgURL,podcastID ,author, duration, category }: PodcastCardProps) => {
+const PodcastCard = ({ title, description, imgURL,podcastID ,author, category }: PodcastCardProps) => {
   const router = useRouter()
   const handlePodcast = () => {
     router.push(`/podcasts/${podcastID}`, {scroll: true})
@@ -63,8 +61,7 @@ const PodcastCard = ({ title, description, imgURL,podcastID ,author, duration, c
         </div>
         <div className='absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-all duration-300'>
           <span className='bg-black-1/90 backdrop-blur-sm text-white-2 text-12 font-medium px-3 py-1 rounded-full'>
-          //! had to work here 
-            {/* {duration} */}
+            {/* Duration placeholder - to be implemented */}
           </span>
         </div>
       </div>

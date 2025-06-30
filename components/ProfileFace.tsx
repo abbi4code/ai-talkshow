@@ -12,11 +12,12 @@ interface ProfilePodcastProps {
     totalListeners: number;
 }
 
-interface profileCardProps {
-    podcastData: ProfilePodcastProps,
-    imageUrl: string,
-    userfirstName: string
+interface ProfileFaceProps {
+    podcastData: ProfilePodcastProps;
+    imageUrl: string;
+    userfirstName: string;
 }
+
 interface PodcastProps {
     _id: Id<"podcasts">;
     _creationTime: number;
@@ -37,10 +38,10 @@ interface PodcastProps {
     views: number;
   }
 
-const ProfileFace = ({podcastData, imageUrl, userfirstName}) => {
+const ProfileFace = ({podcastData, imageUrl, userfirstName}: ProfileFaceProps) => {
     const {setAudio} = useAudio();
     // const [randomPodcast, setRandomPodcast] = useState<PodcastProps | null>(null);
-    const [randomPodcast, setRandomPodcast] = useState(null);
+    const [randomPodcast, setRandomPodcast] = useState<PodcastProps | null>(null);
     console.log("podcast Data",podcastData)
 
     const playRandomPodcast = () => {
@@ -99,7 +100,6 @@ const ProfileFace = ({podcastData, imageUrl, userfirstName}) => {
           />
           <h2 className="text-16 font-semibold text-white-1">
             {podcastData?.totalListeners} &nbsp;
-            {console.log("views",podcastData?.totalListeners)}
             <span className="font-normal text-white-2">monthly listeners</span>
           </h2>
         </figure>
