@@ -8,14 +8,14 @@ export const POST = async (req: Request) => {
         const { voicePrompt, voicetype } = await req.json();
 
         const elevenlabs = new ElevenLabsClient({
-            apiKey: process.env.ELEVEN_LABS_API_URL,
+            apiKey: process.env.ELEVEN_LABS_API_KEY,
         });
         
         const audioRes = await elevenlabs.generate({
             voice: voicetype,
             text: voicePrompt,
             model_id: "eleven_monolingual_v1"
-        })
+        });
         // converting it into nodejs readable stream
         const readableAudio = Readable.from(audioRes)
         const chunks = []
@@ -33,10 +33,8 @@ export const POST = async (req: Request) => {
                 "Content-Disposition": `attachment; filename="audio.mp3"`,
             }
         })
-      
     } catch (error: any) {
         console.log("Err", error);
-        return NextResponse.json({error: error.message})
-        
+        return NextResponse.json({error: error.message}) 
     }
 }
