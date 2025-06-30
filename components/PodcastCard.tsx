@@ -11,7 +11,7 @@ interface PodcastCardProps {
   description: string;
   imgURL: string;
   author: string;
-  podcastID: string,
+  podcastID?: string,
   duration: string;
   category: string;
 }

@@ -5,12 +5,12 @@ export const POST = async (req: Request) => {
         const { prompt } = await req.json();
         console.log("Image Prompt:", prompt);
 
-        // Use Pollinations.ai - completely free, no API key needed
+        // used Pollinations.ai - completely free, no API key needed broo
         const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=512&height=512&model=flux&nologo=true`;
         
         console.log("Generated image URL:", imageUrl);
 
-        // Fetch the image
+        // fetch the image
         const imageResponse = await fetch(imageUrl);
         if (!imageResponse.ok) {
             throw new Error("Failed to fetch generated image");

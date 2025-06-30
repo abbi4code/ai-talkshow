@@ -17,7 +17,7 @@ const Home = () => {
         <h1 className='text-20 font-bold text-white-1'>Trending Podcasts</h1>
         <div className='podcast_grid'>
         {trendingpodcast && trendingpodcast.map(({_id,podcastDesc,podcastTitle,imageUrl})=>(
-          <PodcastCard key={_id} title={podcastTitle} description={podcastDesc} imgURL={imageUrl} podcastID={_id}/>
+          <PodcastCard key={_id} title={podcastTitle} description={podcastDesc} imgURL={imageUrl!} podcastID={_id}/>
         ))}
         </div>
       </section>

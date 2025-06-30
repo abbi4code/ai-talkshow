@@ -20,7 +20,7 @@ const PodcastPlayer = () => {
   const [duration,setDuration] = useState(0);
   const [isMuted,setIsMuted] = useState(false)
   const [currentTime, setCurrentTime] = useState(0);
-  const [volume, setVolume] = useState(67); // Initialize with default volume (67%)
+  const [volume, setVolume] = useState(67); 
 
   const { audio } = useAudio();
 
@@ -42,10 +42,9 @@ const PodcastPlayer = () => {
       let changedVolume = (clickX/rect.width) * 100;
       const newVolume = Math.max(0, Math.min(100, changedVolume));
       
-      // Update state
       setVolume(newVolume);
       
-      // Apply to audio element (convert percentage to 0-1 range)
+      
       audioRef.current.volume = newVolume / 100;
     }
   }
