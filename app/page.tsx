@@ -8,7 +8,7 @@ import FeatureShowcase from '@/components/FeatureShowcase';
 import StatisticsSection from '@/components/StatisticsSection';
 import PodcastPlayer from '@/components/PodcastPlayer';
 import CategoryNavigation from '@/components/CategoryNav';
-import { SignedIn, SignIn, useUser } from '@clerk/nextjs';
+import { SignedIn, useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 
 const Heropage = () => {
@@ -48,13 +48,6 @@ const Heropage = () => {
       category: "Education"
     }
   ];
-
-  const currentTrack = {
-    title: "The Future of AI in Content Creation",
-    author: "Sarah Chen",
-    duration: "45:32",
-    image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop"
-  };
 
   const {user} = useUser();
 

@@ -1,6 +1,5 @@
 import { Id } from "@/convex/_generated/dataModel";
 import { Dispatch, SetStateAction, useState } from "react";
-import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { Loader } from "lucide-react";
