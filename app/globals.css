@@ -67,7 +67,7 @@ html {
   }
 
   .modern-card {
-    @apply bg-gradient-to-br from-black-3/80 to-black-2/60 backdrop-blur-xl border border-gray-2/30 rounded-2xl p-6 transition-all duration-300 hover:border-green-1/30 hover:shadow-2xl hover:shadow-green-1/20 hover:scale-[1.02];
+    @apply bg-gradient-to-br from-black-3/80 to-black-2/60 backdrop-blur-xl border border-gray-2/30 rounded-2xl p-6 transition-all duration-300 hover:border-green-1/30 hover:shadow-2xl hover:shadow-green-1/20;
   }
   
   .glass-effect {

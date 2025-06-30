@@ -10,172 +10,205 @@ import { useAudio } from "@/providers/AudioProvider";
 import { Progress } from "./ui/progress";
 import { formatTime } from "@/lib/formatTime";
 
+import { Play, Volume2, Heart, Shuffle, SkipBack, SkipForward, Repeat, Pause, VolumeOff } from 'lucide-react';
+
+
 const PodcastPlayer = () => {
+
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [duration, setDuration] = useState(0);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isPlaying,setIsPlaying] = useState(false)
+  const [duration,setDuration] = useState(0);
+  const [isMuted,setIsMuted] = useState(false)
   const [currentTime, setCurrentTime] = useState(0);
+  const [volume, setVolume] = useState(67); // Initialize with default volume (67%)
+
   const { audio } = useAudio();
 
   const togglePlayPause = () => {
-    if (audioRef.current?.paused) {
+    if(audioRef.current?.paused){
       audioRef.current?.play();
-      setIsPlaying(true);
-    } else {
-      audioRef.current?.pause();
-      setIsPlaying(false);
+      setIsPlaying(true)
+    }else {
+      audioRef.current?.pause()
+      setIsPlaying(false)
     }
   };
+
+  const handleVolume = (e: React.MouseEvent<HTMLDivElement>) => {
+    if(audioRef.current){
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      
+      let changedVolume = (clickX/rect.width) * 100;
+      const newVolume = Math.max(0, Math.min(100, changedVolume));
+      
+      // Update state
+      setVolume(newVolume);
+      
+      // Apply to audio element (convert percentage to 0-1 range)
+      audioRef.current.volume = newVolume / 100;
+    }
+  }
 
   const toggleMute = () => {
-    if (audioRef.current) {
-      audioRef.current.muted = !isMuted;
-      setIsMuted((prev) => !prev);
+    if(audioRef.current){
+      audioRef.current.muted = !isMuted
+      setIsMuted(!isMuted)
     }
-  };
+  }
 
   const forward = () => {
-    if (
+    if(
       audioRef.current &&
       audioRef.current.currentTime &&
-      audioRef.current.duration &&
+      audioRef.current.duration && 
       audioRef.current.currentTime + 5 < audioRef.current.duration
-    ) {
+    ){
       audioRef.current.currentTime += 5;
+    }else if(audioRef.current){
+      const duration = audioRef?.current?.duration
+      audioRef.current.currentTime = duration
     }
-  };
+  }
 
   const rewind = () => {
-    if (audioRef.current && audioRef.current.currentTime - 5 > 0) {
+    if(
+      audioRef.current && audioRef.current.currentTime - 5 > 0
+    ) {
       audioRef.current.currentTime -= 5;
-    } else if (audioRef.current) {
-      audioRef.current.currentTime = 0;
+    }else if(audioRef.current){
+      audioRef.current.currentTime = 0
     }
-  };
+  }
 
-  useEffect(() => {
-    const updateCurrentTime = () => {
-      if (audioRef.current) {
-        setCurrentTime(audioRef.current.currentTime);
+  useEffect(()=> {
+
+    const updateCurrentTime = () =>  {
+      if(audioRef.current){
+        setCurrentTime(audioRef.current.currentTime)
       }
     };
 
     const audioElement = audioRef.current;
-    if (audioElement) {
-      audioElement.addEventListener("timeupdate", updateCurrentTime);
+    if(audioElement){
+      //we will check for audio changes (time)
+      // we have attach this eventlistener to our audio DOM ele
+      audioElement.addEventListener('timeupdate',updateCurrentTime)
 
       return () => {
-        audioElement.removeEventListener("timeupdate", updateCurrentTime);
-      };
-    }
-  }, []);
-
-  useEffect(() => {
-    const audioElement = audioRef.current;
-    if (audio?.audioUrl) {
-      if (audioElement) {
-        audioElement.play().then(() => {
-          setIsPlaying(true);
-        });
+        audioElement.removeEventListener('timeupdate',updateCurrentTime)
       }
-    } else {
-      audioElement?.pause();
-      setIsPlaying(true);
     }
-  }, [audio]);
-  const handleLoadedMetadata = () => {
+
+  },[])
+
+  useEffect(()=> {
+
+    const audioElement = audioRef.current;
+    if(audio?.audioUrl){
+      audioElement?.play().then(()=> {
+        setIsPlaying(true)
+      })
+    }else {
+      audioElement?.pause();
+      //when there is no audio
+      setIsPlaying(false)
+    }
+  },[audio])
+
+  // Sync volume with audio element
+  useEffect(() => {
     if (audioRef.current) {
-      setDuration(audioRef.current.duration);
+      // Set initial volume to audio element
+      audioRef.current.volume = volume / 100;
+    }
+  }, [volume])
+
+  const handleLoadedMetadata = () => {
+    if(audioRef.current) {
+      setDuration(audioRef.current.duration)
     }
   };
 
   const handleAudioEnded = () => {
-    setIsPlaying(false);
-  };
+    setIsPlaying(false)
+  }
+
 
   return (
-    <div
-      className={cn("sticky bottom-0 left-0 flex size-full flex-col bg-black-3 ", {
-        hidden: !audio?.audioUrl || audio?.audioUrl === "",
-      })}
-    >
-      {/* change the color for indicator inside the Progress component in ui folder */}
-      <Progress
+    <div className={cn('bg-gradient-to-br from-black-3/80 to-black-2/60 backdrop-blur-xl border border-gray-2/30 rounded-2xl transition-all duration-300 hover:border-green-1/30 hover:shadow-2xl hover:shadow-green-1/20 flex items-center gap-6 p-4 sticky bottom-0',{hidden: !audio?.audioUrl || audio.audioUrl === ""})}>
+      {/* track Infoo */}
+      <div className='flex items-center gap-4 flex-1 min-w-0'>
+        <div className='relative'>
+          <audio ref={audioRef} src={audio?.audioUrl} className="hidden" onLoadedMetadata={handleLoadedMetadata} onEnded={handleAudioEnded}/>
+                      <Image src={audio?.imageUrl!} alt={audio?.title!} className='w-24 h-24 opacity-100 rounded-lg object-cover' width={96} height={96} />
+          <div className='absolute inset-0 bg-green-1/20 rounded-lg animate-pulse opacity-0 hover:opacity-100 transition-opacity' />
+        </div>
+        <div className='min-w-0 flex-1'>
+          <h4 className='text-14 font-semibold text-white-1 truncate hover:text-green-1 transition-colors cursor-pointer'>
+            {audio?.title}
+          </h4>
+          <p className='text-12 text-gray-1 truncate hover:text-white-3 transition-colors cursor-pointer'>{audio?.author}</p>
+        </div>
+        <button className='p-2 hover:bg-white-1/10 rounded-full transition-colors'>
+          <Heart className="w-4 h-4 text-gray-1 hover:text-green-1 transition-colors" />
+        </button>
+      </div>
+
+      {/* player controls */}
+      <div className='flex flex-col items-center gap-2 flex-1 max-w-md'>
+        <div className='flex items-center gap-4'>
+          <button className='p-2 hover:bg-white-1/10 rounded-full transition-colors'>
+            <Shuffle className="w-4 h-4 text-gray-1 hover:text-white-1 transition-colors" />
+          </button>
+          <button className='p-2 hover:bg-white-1/10 rounded-full transition-colors'>
+            <SkipBack className="w-5 h-5 text-gray-1 hover:text-white-1 transition-colors" onClick={rewind} />
+          </button>
+          <button className='w-10 h-10 rounded-full bg-green-1 hover:bg-green-2 flex-center transition-colors group shadow-lg shadow-green-1/30'>
+            {isPlaying ? <Pause className="w-5 h-5 text-black-1 transition-colors fill-black-1" onClick={togglePlayPause}/> : <Play className="w-5 h-5 text-black-1 transition-colors fill-black-1" onClick={togglePlayPause}/> }
+
+          </button>
+          <button className='p-2 hover:bg-white-1/10 rounded-full transition-colors'>
+            <SkipForward className="w-5 h-5 text-gray-1 hover:text-white-1 transition-colors" onClick={forward} />
+          </button>
+          <button className='p-2 hover:bg-white-1/10 rounded-full transition-colors'>
+            <Repeat className="w-4 h-4 text-gray-1 hover:text-white-1 transition-colors" />
+          </button>
+        </div>
+        <div className='flex items-center gap-2 w-full'>
+          <span className='text-11 text-gray-1'>{formatTime(currentTime)}</span>
+          <div className='flex-1 h-1 bg-gray-2 rounded-full group cursor-pointer'>
+            {/* <div className='w-1/3 h-full bg-green-1 rounded-full relative'>
+              <div className='absolute right-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-green-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity'></div>
+            </div> */}
+              <Progress
         value={(currentTime / duration) * 100}
         className="w-full"
         max={duration}
       />
-      <section className="bg-[#000000] flex h-[112px] w-full items-center justify-between px-4 max-md:justify-center  md:px-12">
-        <audio
-          ref={audioRef}
-          src={audio?.audioUrl}
-          className="hidden"
-          onLoadedMetadata={handleLoadedMetadata}
-          onEnded={handleAudioEnded}
-        />
-        <div className="flex items-center gap-4 max-md:hidden">
-          <Link href={`/podcast/${audio?.podcastId}`}>
-            <Image
-              src={audio?.imageUrl || "/images/player1.png"}
-              width={64}
-              height={64}
-              alt="player1"
-              className="aspect-square rounded-xl"
-            />
-          </Link>
-          <div className="flex w-[160px] flex-col">
-            <h2 className="text-14 truncate font-semibold text-white-1">
-              {audio?.title}
-            </h2>
-            <p className="text-12 font-normal text-white-2">{audio?.author}</p>
+          </div>
+          <span className='text-11 text-gray-1'>{formatTime(duration)}</span>
+        </div>
+      </div>
+
+      {/* Volume Controls */}
+      <div className='flex items-center gap-3 flex-1 justify-end'>
+        <button className='p-2 hover:bg-white-1/10 rounded-full transition-colors'>
+        {
+          isMuted ? <VolumeOff className="w-4 h-4 text-gray-1 hover:text-white-1 transition-colors" onClick={toggleMute}/> : <Volume2 className="w-4 h-4 text-gray-1 hover:text-white-1 transition-colors" onClick={toggleMute}/>
+        }
+        
+          
+        </button>
+        <div className='w-24 h-1 bg-gray-2 rounded-full group cursor-pointer' onClick={handleVolume}>
+          <div 
+            className='h-full bg-green-1 rounded-full relative transition-all duration-200 ease-in-out'
+            style={{ width: `${volume}%` }}
+          >
+            <div className='absolute right-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-green-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity'></div>
           </div>
         </div>
-        <div className="flex-center cursor-pointer gap-3 md:gap-6">
-          <div className="flex items-center gap-1.5">
-            <Image
-              src={"/icons/reverse.svg"}
-              width={24}
-              height={24}
-              alt="rewind"
-              onClick={rewind}
-            />
-            <h2 className="text-12 font-bold text-white-4">-5</h2>
-          </div>
-          <Image
-            src={isPlaying ? "/icons/Pause.svg" : "/icons/Play.svg"}
-            width={30}
-            height={30}
-            alt="play"
-            onClick={togglePlayPause}
-          />
-          <div className="flex items-center gap-1.5">
-            <h2 className="text-12 font-bold text-white-4">+5</h2>
-            <Image
-              src={"/icons/forward.svg"}
-              width={24}
-              height={24}
-              alt="forward"
-              onClick={forward}
-            />
-          </div>
-        </div>
-        <div className="flex items-center gap-6">
-          <h2 className="text-16 font-normal text-white-2 max-md:hidden">
-            {formatTime(duration)}
-          </h2>
-          <div className="flex w-full gap-2">
-            <Image
-              src={isMuted ? "/icons/unmute.svg" : "/icons/mute.svg"}
-              width={24}
-              height={24}
-              alt="mute unmute"
-              onClick={toggleMute}
-              className="cursor-pointer"
-            />
-          </div>
-        </div>
-      </section>
+      </div>
     </div>
   );
 };
