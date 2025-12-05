@@ -16,32 +16,88 @@ export const sidebarLinks = [
     },
   ];
   
-  export const voiceDetails = [
-    {
-      id: 1,
-      name: "alloy",
-    },
-    {
-      id: 2,
-      name: "echo",
-    },
-    {
-      id: 3,
-      name: "fable",
-    },
-    {
-      id: 4,
-      name: "onyx",
-    },
-    {
-      id: 5,
-      name: "nova",
-    },
-    {
-      id: 6,
-      name: "shimmer",
-    },
-  ];
+  // ElevenLabs Voice Configuration
+// Voice IDs from ElevenLabs premade voices
+export interface VoiceOption {
+  id: number;
+  name: string;
+  voiceId: string;      // ElevenLabs voice ID
+  gender: 'male' | 'female';
+  description: string;
+}
+
+export const voiceCategories: VoiceOption[] = [
+  {
+    id: 1,
+    name: "Rachel",
+    voiceId: "21m00Tcm4TlvDq8ikWAM",
+    gender: "female",
+    description: "Calm & young American female",
+  },
+  {
+    id: 2,
+    name: "Drew",
+    voiceId: "29vD33N1CtxCmqQRPOHJ",
+    gender: "male",
+    description: "Well-rounded American male",
+  },
+  {
+    id: 3,
+    name: "Clyde",
+    voiceId: "2EiwWnXFnvU5JabPnv8n",
+    gender: "male",
+    description: "War veteran, deep & intense",
+  },
+  {
+    id: 4,
+    name: "Paul",
+    voiceId: "5Q0t7uMcjvnagumLfvZi",
+    gender: "male",
+    description: "Ground reporter, authoritative",
+  },
+  {
+    id: 5,
+    name: "Domi",
+    voiceId: "AZnzlk1XvdvUeBnXmlld",
+    gender: "female",
+    description: "Strong & assertive female",
+  },
+  {
+    id: 6,
+    name: "Dave",
+    voiceId: "CYw3kZ02Hs0563khs1Fj",
+    gender: "male",
+    description: "Conversational British-Essex",
+  },
+  {
+    id: 7,
+    name: "Fin",
+    voiceId: "D38z5RcWu1voky8WS1ja",
+    gender: "male",
+    description: "Sailor, old & raspy Irish",
+  },
+  {
+    id: 8,
+    name: "Sarah",
+    voiceId: "EXAVITQu4vr4xnSDxMaL",
+    gender: "female",
+    description: "Soft & expressive American",
+  },
+  {
+    id: 9,
+    name: "Antoni",
+    voiceId: "ErXwobaYiN019PkySvjV",
+    gender: "male",
+    description: "Well-rounded young American",
+  },
+  {
+    id: 10,
+    name: "Thomas",
+    voiceId: "GBv7mTt0atIp3Br8iCZE",
+    gender: "male",
+    description: "Calm American storyteller",
+  },
+];
   
   export const podcastData = [
     {

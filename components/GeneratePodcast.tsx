@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 import { cn } from "@/lib/utils";
 
 interface GeneratePodcastProps {
-  voiceType: string;
+  voiceId: string;  // ElevenLabs voice ID
   setAudio: Dispatch<SetStateAction<string>>;
   audio: string;
   setAudioStorageId: Dispatch<SetStateAction<Id<"_storage"> | null>>;
@@ -22,7 +22,7 @@ interface GeneratePodcastProps {
 
 const useGeneratePodcast = ({
   setAudio,
-  voiceType,
+  voiceId,
   voicePrompt,
   setAudioStorageId,
   setVoicePrompt
@@ -38,8 +38,8 @@ const useGeneratePodcast = ({
     setGenerate(true);
     setAudio("");
 
-    if (!voicePrompt) {
-      toast({ title: "Please provide text and voiceType to generate audio" });
+    if (!voicePrompt || !voiceId) {
+      toast({ title: "Please provide text and select a voice to generate audio" });
 
       return setGenerate(false);
     }
@@ -49,14 +49,26 @@ const useGeneratePodcast = ({
         "/api/elevenlabs",
         {
           method: "POST",
-          body: JSON.stringify({ voiceType, voicePrompt }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ voiceId, voicePrompt }),
         }
       );
-    
 
+      if(!res.ok || res.status !== 200){
+        toast({
+          title: "Failed to generate audio.",
+          variant: "destructive",
+        });
+        setGenerate(false);
+        return;
+
+      }
+    
       const blob = await res.blob();
       const filename = `podcast-${uuidv4()}.mp3`;
-      const file = new File([blob], filename, { type: "audio/,mpeg" });
+      const file = new File([blob], filename, { type: "audio/mpeg" });
 
       const audioUpload = await startUpload([file]);
       console.log("audioUpload", audioUpload);
@@ -113,9 +125,10 @@ const GeneratePodcast = (props: GeneratePodcastProps) => {
       }
       const data = await res.json();
       console.log("data from backend ai", data.content)
-      await props.setVoicePrompt(data.content);
+      props.setVoicePrompt(data.content);
       console.log("voicePrompt", props.voicePrompt);
-      generatePodcast();
+      setIsAiPodcast(false)
+      // generatePodcast();
       setGeneratingPod(false);
       
     } catch (error: any) {

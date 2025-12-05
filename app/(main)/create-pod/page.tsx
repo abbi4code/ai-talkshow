@@ -33,15 +33,15 @@ import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
+import { voiceCategories } from "@/constants/const";
 
 const formSchema = z.object({
   podcastTitle: z.string().min(2),
   podcastDesc: z.string().min(10)
 });
 
-const voiceCatogories = ['Drew', 'Rachel', 'Sarah']
 const Page = () => {
-  const [voicetype, setVoiceType] = useState("");
+  const [selectedVoice, setSelectedVoice] = useState<{name: string; voiceId: string} | null>(null);
   const [submit, setSubmit] = useState(false)
 
   const [imagePrompt, setImagePrompt] = useState('');
@@ -70,12 +70,12 @@ const Page = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setSubmit(true)
     try {
-      if(!audioUrl || !imageUrl || !voicetype){
+      if(!audioUrl || !imageUrl || !selectedVoice){
         toast({title: "Please generate audio and image first"});
         setSubmit(false)
         throw new Error("Please generate audio and image")
       }
-      const podcast = await createPodcast({podcastTitle: values.podcastTitle, podcastDesc: values.podcastDesc,audioDuration,audioUrl,imageUrl,imagePrompt,voiceType: voicetype,views: 0,voicePrompt,imageStorageId: imageStorageId!, audioStorageId:audioStorageId!})
+      const podcast = await createPodcast({podcastTitle: values.podcastTitle, podcastDesc: values.podcastDesc,audioDuration,audioUrl,imageUrl,imagePrompt,voiceType: selectedVoice.name,views: 0,voicePrompt,imageStorageId: imageStorageId!, audioStorageId:audioStorageId!})
       console.log("Podcast",podcast)
       toast({title: "Podcast created successfully"})
       setSubmit(false)
@@ -119,10 +119,13 @@ const Page = () => {
               <Label className="font-bold text-16 text-white-1 ">
                 Select Ai voice
               </Label>
-              <Select onValueChange={(value) => setVoiceType(value)}>
+              <Select onValueChange={(value) => {
+                const voice = voiceCategories.find(v => v.voiceId === value);
+                if (voice) setSelectedVoice({ name: voice.name, voiceId: voice.voiceId });
+              }}>
                 <SelectTrigger
                   className={cn(
-                    "text-16 w-full border-none bg-black-1 text-gray-1 focus-visible:ring-offset-orange-1"
+                    "text-24 w-full border-none bg-black-1 text-gray-1 focus-visible:ring-offset-orange-1"
                   )}
                 >
                   <SelectValue
@@ -130,26 +133,26 @@ const Page = () => {
                     className="placeholder:text-gray-1"
                   />
                 </SelectTrigger>
-                <SelectContent className="text-16 border-none bg-black-1 font-bold text-white-1 focus:ring-orange-1">
-                  {voiceCatogories.map((category) => (
+                <SelectContent className="text-16 border-none bg-green-600 font-bold text-white-1 focus:ring-orange-1">
+                  {voiceCategories.map((voice) => (
                     <SelectItem
-                      key={category}
-                      value={category}
-                      className="capitalize focus:bg-orange-1"
+                      key={voice.id}
+                      value={voice.voiceId}
+                      className="capitalize text-16 focus:bg-orange-1"
                     >
-                      {category}
+                      <div className="flex flex-col">
+                        <span>{voice.name}</span>
+                        <span className="text-12 text-white/30">{voice.description}</span>
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
-                {/* a hidden voice just for the user to preview the voice they selecting */}
-                {voicetype && (
-                  <audio
-                    src={`/${voicetype}.mp3`}
-                    autoPlay
-                    className="hidden"
-                  />
-                )}
               </Select>
+              {selectedVoice && (
+                <p className="text-12 text-gray-1 mt-1">
+                  Selected: {selectedVoice.name}
+                </p>
+              )}
             </div>
             <FormField
           control={form.control}
@@ -169,7 +172,7 @@ const Page = () => {
               <GeneratePodcast 
               setAudioStorageId={setAudioStorageId}
               setAudio={setAudioUrl}
-              voiceType={voicetype}
+              voiceId={selectedVoice?.voiceId || ""}
               audio={audioUrl}
               voicePrompt={voicePrompt}
               setVoicePrompt={setVoicePrompt}
