@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js';
-import { Readable } from "stream";
 
 export const POST = async (req: Request) => {
     try {
