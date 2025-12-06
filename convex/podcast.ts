@@ -1,7 +1,10 @@
+/**
+ * Convex Db schema & methods
+ */
+
+
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-
-
 
 export const createPodcast = mutation({
     args: {
@@ -18,35 +21,50 @@ export const createPodcast = mutation({
         audioDuration: v.number(),
     },
     handler: async(ctx , args) => {
-        const userAuthorize = await ctx.auth.getUserIdentity();
+        const identity = await ctx.auth.getUserIdentity();
 
-        if(!userAuthorize){
-            throw new ConvexError("Unauthorized");
+        if(!identity){
+            throw new ConvexError("Unauthorized - Please sign in");
         }
 
-        const user = await ctx.db.query("users").filter((c)=> c.eq(c.field("email"), userAuthorize.email)).collect();
+        // find existing user
+        let user = await ctx.db
+            .query("users")
+            .filter((c) => c.eq(c.field("email"), identity.email))
+            .first();
 
-        if(user.length === 0){
-            throw new ConvexError("User not found");
+        // If user doesn't exist, auto-create them (fallback for webhook issues)
+        if (!user) {
+            const userId = await ctx.db.insert("users", {
+                clerkId: identity.subject,  // clerk userId
+                email: identity.email!,
+                name: identity.name || identity.email?.split("@")[0] || "User",
+                imageUrl: identity.pictureUrl || "",
+            });
+            user = await ctx.db.get(userId);
         }
 
-        return await ctx.db.insert("podcasts",{
+        if (!user) {
+            throw new ConvexError("Failed to create or find user");
+        }
+
+        return await ctx.db.insert("podcasts", {
             audioStorageId: args.audioStorageId,
-            user: user[0]._id,
+            user: user._id,
             podcastTitle: args.podcastTitle,
             podcastDesc: args.podcastDesc,
             audioUrl: args.audioUrl,
             imageUrl: args.imageUrl,
             imageStorageId: args.imageStorageId,
-            author: user[0].name,
-            authorId: user[0].clerkId,
+            author: user.name,
+            authorId: user.clerkId,
             voicePrompt: args.voicePrompt,
             imagePrompt: args.imagePrompt,
             voiceType: args.voiceType,
             views: args.views,
-            authorImageUrl: user[0].imageUrl,
+            authorImageUrl: user.imageUrl,
             audioDuration: args.audioDuration,
-        })
+        });
     }
 })
 

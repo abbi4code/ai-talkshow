@@ -19,7 +19,9 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        plain: "font-bold text-black-1 text-white-1"
+        plain: "font-bold text-black-1 text-white-1",
+        // Green button - solid green bg, fades on hover
+        generate: "bg-green-600 text-white font-bold shadow-md hover:bg-green-600/50 transition-all duration-300",
       },
       size: {
         default: "h-9 px-4 py-2",

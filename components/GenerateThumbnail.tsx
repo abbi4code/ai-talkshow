@@ -139,8 +139,9 @@ const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUr
      </div>
      <div className="mt-5 w-full max-w-[200px]">
        <Button
-         type="submit"
-         className="text-16 bg-orange-1 py-4 font-extrabold text-white-1 transition-all duration-500 "
+         type="button"
+         variant="generate"
+         className="text-16 w-full py-4"
          onClick={generateImg}
        >
          {imgUploading ? (
@@ -149,7 +150,7 @@ const GenerateThumbnail = ({imagePrompt, setImageUrl, setImageStorageId, imageUr
              <Loader size={15} className="animate-spin" />
            </>
          ) : (
-           "Generate"
+           "Generate Thumbnail"
          )}
        </Button>
      </div>

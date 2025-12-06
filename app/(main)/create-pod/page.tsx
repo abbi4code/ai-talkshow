@@ -68,24 +68,57 @@ const Page = () => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setSubmit(true)
+    setSubmit(true);
+    
     try {
-      if(!audioUrl || !imageUrl || !selectedVoice){
-        toast({title: "Please generate audio and image first"});
-        setSubmit(false)
-        throw new Error("Please generate audio and image")
+      // Validate all required fields before submission
+      if (!selectedVoice) {
+        toast({ title: "Please select a voice", variant: "destructive" });
+        setSubmit(false);
+        return;
       }
-      const podcast = await createPodcast({podcastTitle: values.podcastTitle, podcastDesc: values.podcastDesc,audioDuration,audioUrl,imageUrl,imagePrompt,voiceType: selectedVoice.name,views: 0,voicePrompt,imageStorageId: imageStorageId!, audioStorageId:audioStorageId!})
-      console.log("Podcast",podcast)
-      toast({title: "Podcast created successfully"})
-      setSubmit(false)
-      router.push("/")
-    } catch (error) {
-      console.log("error",error)
-      toast({title: "Error while creating podcast",variant:"destructive"})
-      setSubmit(false)
-    }
+      
+      if (!audioUrl || !audioStorageId) {
+        toast({ title: "Please generate audio first", variant: "destructive" });
+        setSubmit(false);
+        return;
+      }
+      
+      if (!imageUrl || !imageStorageId) {
+        toast({ title: "Please generate or upload a thumbnail", variant: "destructive" });
+        setSubmit(false);
+        return;
+      }
 
+      // All validations passed - create podcast
+      const podcast = await createPodcast({
+        podcastTitle: values.podcastTitle,
+        podcastDesc: values.podcastDesc,
+        audioDuration,
+        audioUrl,
+        imageUrl,
+        imagePrompt: imagePrompt || "Custom uploaded image",  // Fallback if user uploaded custom image
+        voiceType: selectedVoice.name,
+        views: 0,
+        voicePrompt: voicePrompt || "Custom audio",  // Fallback
+        imageStorageId,
+        audioStorageId,
+      });
+      
+      console.log("Podcast created:", podcast);
+      toast({ title: "Podcast created successfully!" });
+      router.push("/home");
+      
+    } catch (error) {
+      console.error("Error creating podcast:", error);
+      toast({ 
+        title: "Error while creating podcast", 
+        description: error instanceof Error ? error.message : "Please try again",
+        variant: "destructive" 
+      });
+    } finally {
+      setSubmit(false);
+    }
   }
   return (
     <div className="mt-10 flex flex-col">
@@ -186,7 +219,7 @@ const Page = () => {
                imagePrompt={imagePrompt}
                />
               <div className="mt-10 w-full">
-                <Button type="submit" className="text-16 w-full bg-orange-1 py-4 font-extrabold text-white-1 transition-all duration-500 hover:bg-black-1">
+                <Button type="submit" className="text-16 bg-orange-400 hover:bg-orange-400/50 font-bold w-30 py-4">
                   {submit ? (
                     <>
                   

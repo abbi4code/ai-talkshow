@@ -110,6 +110,11 @@ const GeneratePodcast = (props: GeneratePodcastProps) => {
     try {
       setGeneratingPod(true);
       console.log("aiproempt", aiPrompt);
+      if(aiPrompt.length === 0){
+        toast({title: "Provide a Podcast topic. "})
+        setGeneratingPod(false)
+        return
+      }
       const res = await fetch("/api/gemeni",{
         method: 'POST',
         headers: {
@@ -128,8 +133,8 @@ const GeneratePodcast = (props: GeneratePodcastProps) => {
       props.setVoicePrompt(data.content);
       console.log("voicePrompt", props.voicePrompt);
       setIsAiPodcast(false)
-      // generatePodcast();
       setGeneratingPod(false);
+      toast({title: "Review & edit before creating your podcast."})
       
     } catch (error: any) {
       console.log("error while generating via ai prompt", error.message)
@@ -183,36 +188,36 @@ const GeneratePodcast = (props: GeneratePodcastProps) => {
       <div className="mt-5 w-full max-w-[200px]">
         {isAiPodcast ? (
           <Button
-          type="submit"
-          className="text-16 bg-orange-1 py-4 font-extrabold text-white-1 transition-all duration-500 "
-          onClick={generatePodcastbyai}
-        >
-          {generatingPod ? (
-            <>
-              Generating
-              <Loader size={15} className="animate-spin" />
-            </>
-          ) : (
-            "Generate Content"
-          )}
-        </Button>
-
-        ): (
+            type="button"
+            variant="generate"
+            className="text-16 w-full py-4"
+            onClick={generatePodcastbyai}
+          >
+            {generatingPod ? (
+              <>
+                Generating
+                <Loader size={15} className="animate-spin" />
+              </>
+            ) : (
+              "Generate Content"
+            )}
+          </Button>
+        ) : (
           <Button
-          type="submit"
-          className="text-16 bg-orange-1 py-4 font-extrabold text-white-1 transition-all duration-500 "
-          onClick={generatePodcast}
-        >
-          {generate ? (
-            <>
-              Generating
-              <Loader size={15} className="animate-spin" />
-            </>
-          ) : (
-            "Generate"
-          )}
-        </Button>
-
+            type="button"
+            variant="generate"
+            className="text-16 w-full py-4"
+            onClick={generatePodcast}
+          >
+            {generate ? (
+              <>
+                Generating
+                <Loader size={15} className="animate-spin" />
+              </>
+            ) : (
+              "Generate Pod"
+            )}
+          </Button>
         )}
       </div>
       {props.audio && (

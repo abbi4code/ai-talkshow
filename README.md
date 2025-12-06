@@ -108,7 +108,4 @@ npm run build     # build for production
 npm run start     # run production build
 ```
 
----
-
-## License
-MIT – see LICENSE (or update this section with your preferred license).
+fix one issue and i will have you a coffee 😎

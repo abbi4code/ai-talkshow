@@ -4,6 +4,7 @@ import "./globals.css";
 import ConvexClerkProvider from "../providers/ConvexClerkProvider";
 import AudioProvider from "@/providers/AudioProvider";
 import { Analytics } from "@vercel/analytics/react";
+import { Toaster } from "@/components/ui/toaster";
 
 const manrope = Manrope({ subsets: ["latin"] });
 
@@ -30,6 +31,7 @@ export default function RootLayout({
         </ConvexClerkProvider>
 
         <Analytics />
+        <Toaster/>
       </body>
     </html>
   );

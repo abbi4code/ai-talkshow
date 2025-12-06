@@ -10,44 +10,19 @@ import PodcastPlayer from '@/components/PodcastPlayer';
 import CategoryNavigation from '@/components/CategoryNav';
 import { SignedIn, useUser } from '@clerk/nextjs';
 import Link from 'next/link';
+import { useQuery } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import LoaderSpinner from '@/components/LoaderSpinner';
 
 const Heropage = () => {
 
 
-  const featuredPodcasts = [
-    {
-      title: "The Future of AI in Content Creation",
-      description: "Exploring how artificial intelligence is revolutionizing the way we create, edit, and distribute digital content across all media platforms.",
-      imgURL: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop",
-      author: "Sarah Chen",
-      duration: "45 min",
-      category: "Technology"
-    },
-    {
-      title: "Building Successful Digital Products",
-      description: "A deep dive into product strategy, user experience design, and the frameworks that drive successful digital product launches.",
-      imgURL: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=400&fit=crop",
-      author: "Marcus Rodriguez",
-      duration: "38 min",
-      category: "Business"
-    },
-    {
-      title: "Mindfulness in the Digital Age",
-      description: "Discovering balance and mental wellness while navigating our hyperconnected world and the constant stream of digital information.",
-      imgURL: "https://images.unsplash.com/photo-1500673922987-e212871fec22?w=400&h=400&fit=crop",
-      author: "Dr. Emily Watson",
-      duration: "32 min",
-      category: "Health"
-    },
-    {
-      title: "The Science of Learning",
-      description: "Understanding how our brains acquire new information and the most effective methods for accelerated learning and retention.",
-      imgURL: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400&h=400&fit=crop",
-      author: "Prof. David Kim",
-      duration: "50 min",
-      category: "Education"
-    }
-  ];
+
+  const featuredPodcasts = useQuery(api.podcast.getAllpodcast);
+  if(!featuredPodcasts){
+    return <LoaderSpinner/>
+  }
+
 
   const {user} = useUser();
 
@@ -66,7 +41,7 @@ const Heropage = () => {
             <a href="home" className="text-white-2 hover:text-green-1 transition-colors font-medium">Home</a>
             <a href="discover" className="text-white-2 hover:text-green-1 transition-colors font-medium">Search</a>
             <SignedIn><Link href={`/profile/${user?.id}`} className="text-white-2 hover:text-green-1 transition-colors font-medium">Your Library</Link></SignedIn>
-            <button className="bg-gradient-to-r from-green-1 to-green-2 text-black-1 font-bold px-8 py-3 rounded-full hover:scale-105 transition-transform shadow-lg shadow-green-1/30">
+            <button disabled className="bg-gradient-to-r from-green-1 to-green-2 text-black-1 font-bold px-8 py-3 rounded-full  transition-transform shadow-lg shadow-green-1/30">
               Premium
             </button>
           </div>
@@ -82,9 +57,9 @@ const Heropage = () => {
         <section>
           <h2 className="text-28 font-bold gradient-text mb-8">Made for You</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredPodcasts.map((podcast, index) => (
-              <PodcastCard key={index} {...podcast} />
-            ))}
+          {featuredPodcasts && featuredPodcasts.map(({_id,podcastDesc,podcastTitle,imageUrl,author,audioDuration})=>(
+          <PodcastCard key={_id} author= {author} title={podcastTitle} description={podcastDesc} imgURL={imageUrl!} podcastID={_id} duration = {audioDuration}/>
+        ))}
           </div>
         </section>
 
@@ -97,7 +72,7 @@ const Heropage = () => {
         {/* Footer */}
         <footer className="text-center py-8 border-t border-gray-2/30">
           <p className="text-gray-1 text-14">
-            © 2024 PodcastAI. Music for everyone.
+            © 2025 PodcastAI. Music for everyone.
           </p>
         </footer>
       </div>

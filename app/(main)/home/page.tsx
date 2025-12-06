@@ -7,7 +7,8 @@ import { useQuery } from 'convex/react'
 import React from 'react'
 
 const Home = () => {
-  const trendingpodcast = useQuery(api.podcast.getAllpodcast);
+  const trendingpodcast = useQuery(api.podcast.getTrendingPodcasts);
+  console.log("trendingPodcast",trendingpodcast)
   if(!trendingpodcast){
     return <LoaderSpinner/>
   }    
@@ -16,8 +17,8 @@ const Home = () => {
       <section className='flex flex-col gap-5'>
         <h1 className='text-20 font-bold text-white-1'>Trending Podcasts</h1>
         <div className='podcast_grid'>
-        {trendingpodcast && trendingpodcast.map(({_id,podcastDesc,podcastTitle,imageUrl})=>(
-          <PodcastCard key={_id} title={podcastTitle} description={podcastDesc} imgURL={imageUrl!} podcastID={_id}/>
+        {trendingpodcast && trendingpodcast.map(({_id,podcastDesc,podcastTitle,imageUrl,author,audioDuration})=>(
+          <PodcastCard key={_id} author= {author} title={podcastTitle} description={podcastDesc} imgURL={imageUrl!} podcastID={_id} duration = {audioDuration}/>
         ))}
         </div>
       </section>

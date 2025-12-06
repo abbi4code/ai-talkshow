@@ -6,11 +6,27 @@ export const POST = async (req: Request) => {
     const { textPrompt } = await req.json();
     const GenAI = new GoogleGenAI({apiKey: process.env.GEMENI_API_KEY || ""});
     const prompt = `
-Write a short podcast script, not more than 20 words, about the following topic:
-"${textPrompt}"
+You are an expert podcast script writer.
 
-Include an introduction, one key idea, and a conclusion. Keep the tone conversational and engaging and dont include text like these (Short musical interlude) just give the result out as text .
+Write a short podcast script (80–120 words) about the topic below.
+Make the tone conversational, friendly, and engaging.
+
+Format:
+- Introduction (hook the audience)
+- One key idea or insight
+- A concise conclusion with a takeaway
+
+Requirements:
+- Do NOT include sound cues like (music), (sound effect), etc.
+- Do NOT include speaker labels like "Host:" or "Narrator:"
+- Write as a flowing speech paragraph, not in bullet points.
+- Avoid repetitive filler phrases.
+- Return only plain text.
+
+Topic: "${textPrompt}"
 `;
+
+
 
     const result = await GenAI.models.generateContent({
       model: "gemini-2.5-flash",
