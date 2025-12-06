@@ -39,14 +39,14 @@ interface PodcastCardProps {
 // export default PodcastCard
 
 
-const PodcastCard = ({ title, description, imgURL,podcastID ,author, category, duration}: PodcastCardProps) => {
+const PodcastCard = ({ title, description, imgURL,podcastID ,author, duration}: PodcastCardProps) => {
   const router = useRouter()
   const handlePodcast = () => {
     router.push(`/podcasts/${podcastID}`, {scroll: true})
   }
   console.log("podcast audio duration: ", duration)
 
-  let podDuration = Math.ceil(duration)
+  const podDuration = Math.ceil(duration)
 
   return (
     <div className='group cursor-pointer flex flex-col gap-4 p-2 rounded-2xl bg-gradient-to-br from-black-3/60 to-black-2/40 border border-gray-2/30 backdrop-blur-xl hover:border-green-1/40 transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl hover:shadow-green-1/20 hover:bg-black-3/80' onClick={handlePodcast}>

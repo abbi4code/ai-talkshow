@@ -16,15 +16,11 @@ import LoaderSpinner from '@/components/LoaderSpinner';
 
 const Heropage = () => {
 
-
-
+  const {user} = useUser();
   const featuredPodcasts = useQuery(api.podcast.getAllpodcast);
   if(!featuredPodcasts){
     return <LoaderSpinner/>
   }
-
-
-  const {user} = useUser();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black-1 to-black-3">
