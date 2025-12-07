@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import LoaderSpinner from '@/components/LoaderSpinner';
+import Image from 'next/image';
 
 const Heropage = () => {
 
@@ -27,11 +28,11 @@ const Heropage = () => {
       <div className="container mx-auto px-4 py-8 space-y-12">
         {/* Navigation */}
         <nav className="flex items-center justify-between py-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-green-1 to-green-2 rounded-full flex-center">
-              <span className="text-black-1 font-bold text-18">P</span>
-            </div>
-            <span className="text-28 font-bold gradient-text">PodcastAI</span>
+          <div className="flex items-center gap-1">
+            {/* <div className="w-10 h-10 flex-center"> */}
+            <Image src="/icons/pod.png" alt="logo" width={80} height={80} />
+            {/* </div> */}
+            {/* <span className="text-28 font-bold">Loop</span> */}
           </div>
           <div className="hidden md:flex items-center gap-8">
             <a href="home" className="text-white-2 hover:text-green-1 transition-colors font-medium">Home</a>

@@ -9,8 +9,8 @@ const HeroSection = () => {
       <div className='absolute inset-0 bg-gradient-to-r from-green-1/5 to-transparent' />
       <div className='relative z-10'>
         <h1 className='text-48 md:text-64 font-bold bg-gradient-to-r from-white via-white-2 to-green-2/90 bg-clip-text text-transparent mb-6 leading-tight'>
-          Your Sound,
-          <span className='block text-green-1'>Reimagined</span>
+          Welcome to
+          <span className='block text-green-1'>Looooop</span>
         </h1>
         <p className='text-20 text-white-4 max-w-2xl leading-relaxed mb-8'>
           Discover millions of podcasts and create your own with AI-powered tools. Stream anywhere, anytime.

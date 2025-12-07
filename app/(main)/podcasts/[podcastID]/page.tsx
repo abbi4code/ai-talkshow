@@ -59,7 +59,7 @@ const Page = ({
         {podcast?.podcastDesc}
       </p>
 
-      <div className="flex flex-col gap-8">
+      {/* <div className="flex flex-col gap-8">
         <div className="flex flex-col gap-4">
           <h1 className="text-18 font-bold text-white-1">Transcription</h1>
           <p className="text-16 font-medium text-white-2">
@@ -72,19 +72,21 @@ const Page = ({
             {podcast?.imagePrompt}
           </p>
         </div>
-      </div>
+      </div> */}
       <section className="mt-8 flex flex-col gap-5">
         <h1 className="text-20 font-bold text-white-1">Similar Podcasts</h1>
         {similarPodcasts && similarPodcasts.length > 0 ? (
           <div className="podcast_grid">
             {similarPodcasts?.map(
-              ({ _id, podcastTitle, podcastDesc, imageUrl }) => (
+              ({ _id, podcastTitle, podcastDesc, imageUrl, audioDuration, author }) => (
                 <PodcastCard
                   key={_id}
                   imgURL={imageUrl as string}
                   title={podcastTitle}
                   description={podcastDesc}
                   podcastID={_id}
+                  author={author}
+                  duration={audioDuration}
                 />
               )
             )}

@@ -22,6 +22,7 @@ const buttonVariants = cva(
         plain: "font-bold text-black-1 text-white-1",
         // Green button - solid green bg, fades on hover
         generate: "bg-green-600 text-white font-bold shadow-md hover:bg-green-600/50 transition-all duration-300",
+        logout: "bg-red-600 text-white font-bold hover:bg-red-600/50 transition-all duration-300"
       },
       size: {
         default: "h-9 px-4 py-2",

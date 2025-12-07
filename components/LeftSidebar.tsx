@@ -26,9 +26,9 @@ const LeftSidebar = () => {
           href="/"
           className="flex cursor-pointer items-center max-lg:justify-center"
         >
-          <Image src="/icons/logo.svg" alt="logo" width={23} height={27} />
+          <Image src="/icons/pod.png" alt="logo" width={50} height={50} />
           <h1 className="text-24 font-extrabold text-white max-lg:hidden">
-            WAVE
+            Loop
           </h1>
         </Link>
         {sidebarLinks.map(({ imgURL, label, route }) => {
@@ -60,7 +60,8 @@ const LeftSidebar = () => {
       <SignedIn>
         <div className="flex-center w-full pb-14 max-lg:px-4 lg:pr-8">
           <Button
-            className="text-16 w-full bg-orange-1 font-extrabold"
+            variant={"generate"}
+            className="text-16 w-full font-extrabold"
             onClick={() => signOut(() => router.push("/"))}
           >
             Log Out

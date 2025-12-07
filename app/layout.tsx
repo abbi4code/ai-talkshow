@@ -9,7 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 const manrope = Manrope({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "WAVE",
+  title: "Loop",
   description: "Generate your podcasts using AI",
   icons: {
     icon: "/icons/logo.svg",
