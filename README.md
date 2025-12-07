@@ -1,6 +1,6 @@
-## WAVE – AI Talkshow/Podcast Generator
+## Loop – AI Talkshow/Podcast Generator
 
-WAVE is an AI-powered podcast creation and listening platform. Create AI-generated talkshow episodes from prompts, synthesize voices, generate cover art, and share them with others. It includes discovery, profiles, and a persistent audio player for a smooth listening experience across the app.
+Loop is an AI-powered podcast creation and listening platform. Create AI-generated talkshow episodes from prompts, synthesize voices, generate cover art, and share them with others. It includes discovery, profiles, and a persistent audio player for a smooth listening experience across the app.
 
 ### Key Features
 - **Authentication**: Protected routes using Clerk middleware; public access to `/`, `/sign-in`, `/sign-up`.
